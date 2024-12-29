@@ -1,3 +1,5 @@
+import uvicorn
+
 from fastapi import FastAPI, Form, Request, status
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
@@ -68,3 +70,6 @@ async def fetch_home(request: Request):
 @app.post("/")
 async def create_link(request: Request, link: str = Form(...)):
     return RedirectResponse(f"/{link}", status_code=status.HTTP_303_SEE_OTHER)
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="localhost", port=8000, reload=True)
