@@ -44,8 +44,6 @@ I welcome contributions from the community! To get started:
 3. **Create a New Branch**: Work on your feature or bug fix in a separate branch.
 4. **Submit a Pull Request**: Propose your changes for review.
 
-For detailed guidelines, please refer to our [Contributing Guide](CONTRIBUTING.md).
-
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
