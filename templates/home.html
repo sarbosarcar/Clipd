@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clipd | Home</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+    <link rel="icon" type="image/png" href={{ url_for('static', path="/favicon/favicon-32x32.png") }} sizes="32x32">
+    <link rel="icon" type="image/png" href={{ url_for('static', path="/favicon/favicon-16x16.png") }} sizes="16x16">
+    <link rel="apple-touch-icon" sizes="180x180" href={{ url_for('static', path="/favicon/apple-touch-icon.png") }}>
+    <link rel="manifest" href={{ url_for('static', path="/favicon/site.webmanifest") }}>
+</head>
+<body>
+    <main class="bg-gray-800 min-h-screen font-mono">
+        <nav class="bg-gray-900 p-4 sticky top-0">
+            <div class="container mx-auto flex justify-between items-center">
+                <a href="/" class="text-white text-2xl font-bold">Clipd</a>
+                <div class="space-x-4">
+                    <a href="#about" class="text-gray-300 hover:text-white">About</a>
+                </div>
+            </div>
+        </nav>
+        <div class="container mx-auto py-16 px-4">
+            <div class="text-center py-24">
+                <h1 class="text-4xl font-bold text-white mb-4">Welcome to Clipd</h1>
+                <p class="text-gray-300 text-xl mb-8">Share your clipboard contents securely and easily.</p>
+                <form method="post" action="/" class="flex justify-center">
+                    <input type="text" name="link" class="w-96 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your link here...">
+                    <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 ml-4">
+                        Get Started
+                    </button>
+                </form>
+            </div>
+        </div>
+        <section class="bg-gray-800 text-gray-300 py-16" id="about">
+            <div class="container mx-auto text-center">
+                <h2 class="text-4xl font-bold mb-4">Why Clipd?</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 my-16">
+                    <div class="p-8 rounded-lg bg-gray-900 text-justify">
+                        <h3 class="text-2xl font-bold mb-4 text-center">Reliable</h3>
+                        <p>Clipd uses base64 encoding and ensures that your clipboard contents are retained in the correct format.</p>
+                    </div>
+                    <div class="p-8 rounded-lg bg-gray-900 text-justify">
+                        <h3 class="text-2xl font-bold mb-4 text-center">Easy to Use</h3>
+                        <p>Clipd is designed to be simple and easy to use. Just paste your clipboard contents and use a link that you can choose!</p>
+                    </div>
+                    <div class="p-8 rounded-lg bg-gray-900 text-justify">
+                        <h3 class="text-2xl font-bold mb-4 text-center">No Sign Up Required</h3>
+                        <p>Clipd does not require you to sign up or create an account. Just paste and share the link.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+
+    <footer class="bg-gray-900 text-gray-300 py-8">
+        <div class="container mx-auto text-center">
+            <p>&copy; <span></span> Clipd. Built with ♡ by <a href="https://github.com/sarbosarcar/" class="underline" target="_blank">sarbosarcar</a></p>
+        </div>
+    </footer>
+    <script>
+        document.querySelector('span').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

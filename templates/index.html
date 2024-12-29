@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clipd</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+    <link rel="icon" type="image/png" href={{ url_for('static', path="/favicon/favicon-32x32.png") }} sizes="32x32">
+    <link rel="icon" type="image/png" href={{ url_for('static', path="/favicon/favicon-16x16.png") }} sizes="16x16">
+    <link rel="apple-touch-icon" sizes="180x180" href={{ url_for('static', path="/favicon/apple-touch-icon.png") }}>
+    <link rel="manifest" href={{ url_for('static', path="/favicon/site.webmanifest") }}>
+</head>
+<body>
+    <form method="post" class="min-h-screen bg-gray-900 text-white flex items-center justify-center font-mono" action="/{{ link }}/save">
+        <button class="absolute top-4 right-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" onclick="navigator.clipboard.writeText(document.querySelector('textarea').value);document.querySelector('textarea').select()">Copy</button>
+        <div class="w-full max-w-4xl p-4">
+            <textarea autocorrect="off" spellcheck="false" name="content" class="w-full h-96 p-4 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4" placeholder="Write your text here..." onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}">{% if prefill != "" %}{{ prefill }}{% endif %}</textarea>
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" onclick="checkContent()">Save</button>
+            <button formaction="/{{ link }}/delete" class="mt-2 block w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-center focus:outline-none focus:ring-2 focus:ring-red-500" onclick="return confirm('Are you sure you want to delete this item?');">Delete</a>
+        </div>
+    </form>    
+    <script>
+        function checkContent() {
+          const textArea = document.querySelector('textarea');
+          if (textArea.value.trim() === "") {
+            alert("The text box is empty. Please enter some text.");
+          } 
+        }
+      </script>
+</body>
+</html>
