@@ -1,5 +1,7 @@
 # Clipd
 
+![screenshot](./static/images/screenshot.png)
+
 Clipd is a minimalist clipboard application that enables users to save text effortlessly, generate customizable links for easy access, and retrieve or update content at any time. It's ideal for quick notes, code snippets, or shared ideas.
 
 ## Features
