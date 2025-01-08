@@ -11,22 +11,74 @@
     <link rel="apple-touch-icon" sizes="180x180" href={{ url_for('static', path="/favicon/apple-touch-icon.png") }}>
     <link rel="manifest" href={{ url_for('static', path="/favicon/site.webmanifest") }}>
 </head>
-<body>
+<body class="bg-gray-900">
     <form method="post" class="min-h-screen bg-gray-900 text-white flex items-center justify-center font-mono" action="/{{ link }}/save">
         <button class="absolute top-4 right-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" onclick="navigator.clipboard.writeText(document.querySelector('textarea').value);document.querySelector('textarea').select()">Copy</button>
         <div class="w-full max-w-4xl p-4">
             <textarea autocorrect="off" spellcheck="false" name="content" class="w-full h-96 p-4 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4" placeholder="Write your text here..." onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}">{% if prefill != "" %}{{ prefill }}{% endif %}</textarea>
+            <button 
             <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" onclick="checkContent()">Save</button>
-            <button formaction="/{{ link }}/delete" class="mt-2 block w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-center focus:outline-none focus:ring-2 focus:ring-red-500" onclick="return confirm('Are you sure you want to delete this item?');">Delete</a>
+            <button formaction="/{{ link }}/delete" class="mt-2 block w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-center focus:outline-none focus:ring-2 focus:ring-red-500" onclick="return confirm('Are you sure you want to delete this item?');">Delete</button>
+
+            <textarea autocorrect="off" spellcheck="false" name="img_content" class="w-full h-24 p-4 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 my-4" id="t-2" placeholder="Placeholder for images">{% if images != "" %}{{ "\n".join(images) }}{% endif %}</textarea>
         </div>
-    </form>    
-    <script>
+    </form> 
+
+    {% if images %}
+      <div class="mt-8 min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center">
+        
+        <h1 class="text-4xl font-mono">Images copied:</h1>
+            {% for image in images %}
+              <div class="bg-gray-800 p-4 rounded-lg my-4">
+                <img src="{{ image }}" alt="Pasted Image" class="w-full h-auto rounded-lg">
+              </div>
+            {% endfor %}
+      </div>
+      {% endif %}
+      <script>
         function checkContent() {
           const textArea = document.querySelector('textarea');
           if (textArea.value.trim() === "") {
             alert("The text box is empty. Please enter some text.");
           } 
         }
+
+        
+        document.addEventListener('paste', function (e) {
+  // Check if clipboard has image data
+  const items = e.clipboardData.items;
+  let imageItem = null;
+  
+  for (let i = 0; i < items.length; i++) {
+    if (items[i].type.indexOf('image') !== -1) {
+      imageItem = items[i];
+      break;
+    }
+  }
+  
+  if (imageItem) {
+    // Convert image to Data URL
+    const file = imageItem.getAsFile();
+    const reader = new FileReader();
+    
+    reader.onloadend = function () {
+      const dataUrl = reader.result;
+      
+      // Get the only textarea element on the page
+      const textarea = document.querySelector('#t-2');
+      
+      if (textarea) {
+        // Append the data URL to the textarea
+        textarea.value += `\n${dataUrl}`;
+      }
+    };
+    
+    // Read the image file as Data URL
+    reader.readAsDataURL(file);
+  }
+});
+
+              
       </script>
 </body>
 </html>
