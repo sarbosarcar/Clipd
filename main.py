@@ -87,4 +87,4 @@ async def create_link(request: Request, link: str = Form(...)):
     return RedirectResponse(f"/{link}", status_code=status.HTTP_303_SEE_OTHER)
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="localhost", port=8000, reload=True)
+    uvicorn.run("main:app", host="localhost", port=9999, reload=True)

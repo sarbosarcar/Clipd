@@ -15,7 +15,7 @@
     <form method="post" class="min-h-screen bg-gray-900 text-white flex items-center justify-center font-mono" action="/{{ link }}/save">
         <button class="absolute top-4 right-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" onclick="navigator.clipboard.writeText(document.querySelector('textarea').value);document.querySelector('textarea').select()">Copy</button>
         <div class="w-full max-w-4xl p-4">
-            <textarea autocorrect="off" spellcheck="false" name="content" class="w-full h-96 p-4 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4" placeholder="Write your text here..." onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}">{% if prefill != "" %}{{ prefill }}{% endif %}</textarea>
+            <textarea id="t-1" autocorrect="off" spellcheck="false" name="content" class="w-full h-96 p-4 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4" placeholder="Write your text here..." onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}">{% if prefill != "" %}{{ prefill }}{% endif %}</textarea>
             <button 
             <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" onclick="checkContent()">Save</button>
             <button formaction="/{{ link }}/delete" class="mt-2 block w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-center focus:outline-none focus:ring-2 focus:ring-red-500" onclick="return confirm('Are you sure you want to delete this item?');">Delete</button>
@@ -43,7 +43,7 @@
           } 
         }
 
-        
+/*        
         document.addEventListener('paste', function (e) {
   // Check if clipboard has image data
   const items = e.clipboardData.items;
@@ -77,6 +77,54 @@
     reader.readAsDataURL(file);
   }
 	alert("Clipboard contents added successfully!");
+});
+*/
+	      document.addEventListener('paste', function (e) {
+  // Access clipboard items
+  const items = e.clipboardData.items;
+  let imageItem = null;
+
+  // Check for image in clipboard
+  for (let i = 0; i < items.length; i++) {
+    if (items[i].type.indexOf('image') !== -1) {
+      imageItem = items[i];
+      break;
+    }
+  }
+
+  if (imageItem) {
+    // If image is found, convert it to Data URL
+    const file = imageItem.getAsFile();
+    const reader = new FileReader();
+
+    reader.onloadend = function () {
+      const dataUrl = reader.result;
+
+      // Get the only textarea element on the page
+      const textarea = document.querySelector('#t-2');
+
+      if (textarea) {
+        // Append the data URL to the textarea
+        textarea.value += `\n${dataUrl}`;
+      }
+      alert("Image pasted successfully!");
+    };
+
+    // Read the image file as Data URL
+    reader.readAsDataURL(file);
+  } else {
+    // If no image is found, handle textual data
+    const text = e.clipboardData.getData('text');
+    const textarea = document.querySelector('#t-1');
+
+    if (textarea && text) {
+      textarea.value += `\n${text}`;
+      alert("Text pasted successfully!");
+    }
+  }
+
+  // Prevent the default paste behavior
+  e.preventDefault();
 });
 
               
