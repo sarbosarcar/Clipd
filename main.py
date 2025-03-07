@@ -17,6 +17,7 @@ dotenv.load_dotenv()
 url: str = os.environ.get("SUPABASE_URL")
 key: str = os.environ.get("SUPABASE_KEY")
 supabase: Client = create_client(url, key)
+LOGIN_PASSWORD: str = os.environ.get("LOGIN_PASSWORD")
 
 app = FastAPI()
 
@@ -36,13 +37,13 @@ async def read_item(cliplink: str, request: Request):
         img = []
     if response == []:
         return templates.TemplateResponse(
-            request=request, name="index.html", context={"link": cliplink, "prefill": "", "images": img}
+            request=request, name="index.html", context={"link": cliplink, "prefill": "", "images": img, "password": LOGIN_PASSWORD}
         )
     else:
         prefill = response[0]["encoded"]
         prefill = base64.b64decode(prefill.encode("utf-8")).decode("utf-8")
         return templates.TemplateResponse(
-            request=request, name="index.html", context={"link": cliplink, "prefill": prefill, "images": img}
+            request=request, name="index.html", context={"link": cliplink, "prefill": prefill, "images": img, "password": LOGIN_PASSWORD}
         )
 
 @app.post("/{cliplink}/save")

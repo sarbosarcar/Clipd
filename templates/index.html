@@ -10,6 +10,65 @@
     <link rel="icon" type="image/png" href={{ url_for('static', path="/favicon/favicon-16x16.png") }} sizes="16x16">
     <link rel="apple-touch-icon" sizes="180x180" href={{ url_for('static', path="/favicon/apple-touch-icon.png") }}>
     <link rel="manifest" href={{ url_for('static', path="/favicon/site.webmanifest") }}>
+    
+    <div id="passwordPrompt" class="fixed top-0 left-0 w-full h-full bg-gray-900 flex items-center justify-center flex-col">
+      <label for="passwordInput" class="text-white text-lg mb-2">Enter Password to Access:</label>
+      <input type="password" id="passwordInput" class="bg-gray-800 text-white p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" autofocus>
+      <button onclick="verifyPassword()" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">Submit</button>
+  </div>
+  
+  
+  <script>
+    (function () {
+      const password = "{{ password }}"; // Inject secure password
+      const maxAttempts = 3;
+      const timeoutMinutes = 5;
+  
+      function logout() {
+        sessionStorage.removeItem("authenticated");
+        sessionStorage.removeItem("lastActive");
+        alert("Session expired. Please log in again.");
+        location.reload();
+      }
+  
+      if (sessionStorage.getItem("authenticated") === "true") {
+        const lastActive = sessionStorage.getItem("lastActive");
+        if (lastActive && (Date.now() - lastActive > timeoutMinutes * 60 * 1000)) {
+          logout();
+          return;
+        }
+        sessionStorage.setItem("lastActive", Date.now());
+        document.getElementById("passwordPrompt").style.display = "none"; // Hide prompt
+        return;
+      }
+  
+      let attempts = 0;
+      window.verifyPassword = function () {
+        const userInput = document.getElementById("passwordInput").value;
+        if (userInput === password) {
+          sessionStorage.setItem("authenticated", "true");
+          sessionStorage.setItem("lastActive", Date.now());
+          document.getElementById("passwordPrompt").style.display = "none"; // Hide prompt
+        } else {
+          attempts++;
+          if (attempts >= maxAttempts) {
+            alert("Too many failed attempts. Access denied.");
+            document.body.innerHTML = ""; // Lock user out
+          } else {
+            alert(`Incorrect Password. (${maxAttempts - attempts} attempts left)`);
+          }
+        }
+      };
+  
+      setInterval(() => {
+        const lastActive = sessionStorage.getItem("lastActive");
+        if (lastActive && (Date.now() - lastActive > timeoutMinutes * 60 * 1000)) {
+          logout();
+        }
+      }, 60 * 1000);
+    })();
+  </script>
+    
 </head>
 <body class="bg-gray-900">
     <form method="post" class="min-h-screen bg-gray-900 text-white flex items-center justify-center font-mono" action="/{{ link }}/save">
