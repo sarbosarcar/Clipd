@@ -5,12 +5,12 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-import os
 from supabase import create_client, Client
 
+import os
 import dotenv
-
 import base64
+from datetime import datetime, timedelta
 
 dotenv.load_dotenv()
 
@@ -26,6 +26,20 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
 
+def format_datetime(timestamp: str) -> str:
+    dt_utc = datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
+
+    # Manually add 5 hours 30 minutes for IST
+    dt_ist = dt_utc + timedelta(hours=5, minutes=30)
+
+    return dt_ist.strftime("%d %b %Y %H:%M")
+
+@app.get("/~root")
+async def fetch_details(request: Request):
+    response = supabase.table("clipboard").select("created_at, link").order("created_at", desc=True).execute().data
+    for r in response:
+        r["created_at"] = format_datetime(r["created_at"])
+    return templates.TemplateResponse(request=request, name="root.html", context={"links": response, "password": LOGIN_PASSWORD})
 
 @app.get("/{cliplink}", response_class=HTMLResponse)
 async def read_item(cliplink: str, request: Request):
@@ -68,6 +82,10 @@ async def write_item(request: Request, cliplink: str, content: str = Form(...), 
             supabase.table("clipboard").update({"encoded": base64_string}).eq("link", cliplink).execute()
         if imgs_ret:
             supabase.table("clipboard").update({"images": imgs_ret}).eq("link", cliplink).execute()
+        else:
+            curr_images = supabase.table("clipboard").select("images").eq("link", cliplink).execute().data
+            if curr_images:
+                supabase.table("clipboard").update({"images": None}).eq("link", cliplink).execute()
 
     return RedirectResponse(f"/{cliplink}", status_code=status.HTTP_303_SEE_OTHER)
 
