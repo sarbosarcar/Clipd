@@ -18,7 +18,7 @@ url: str = os.environ.get("SUPABASE_URL")
 key: str = os.environ.get("SUPABASE_KEY")
 supabase: Client = create_client(url, key)
 LOGIN_PASSWORD: str = os.environ.get("LOGIN_PASSWORD")
-
+ 
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
