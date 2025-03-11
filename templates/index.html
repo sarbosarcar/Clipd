@@ -10,12 +10,12 @@
         />
 
         <link rel="icon" type="image/png" href={{ url_for('static',
-        path="/favicon/favicon-32x32.png") }} sizes="32x32"> 
-        <link rel="icon" type="image/png" href={{ url_for('static',
-        path="/favicon/favicon-16x16.png") }} sizes="16x16"> 
-        <link rel="apple-touch-icon" sizes="180x180" href={{ url_for('static',
-        path="/favicon/apple-touch-icon.png") }}> 
-        <link rel="manifest" href={{ url_for('static', path="/favicon/site.webmanifest") }}>
+        path="/favicon/favicon-32x32.png") }} sizes="32x32"> <link rel="icon"
+        type="image/png" href={{ url_for('static',
+        path="/favicon/favicon-16x16.png") }} sizes="16x16"> <link
+        rel="apple-touch-icon" sizes="180x180" href={{ url_for('static',
+        path="/favicon/apple-touch-icon.png") }}> <link rel="manifest" href={{
+        url_for('static', path="/favicon/site.webmanifest") }}>
 
         <div
             id="passwordPrompt"
@@ -104,44 +104,55 @@
         </script>
     </head>
     <body class="bg-gray-900 font-mono">
+        <nav class="text-gray-400 p-4">
+            <ol class="flex items-center space-x-2">
+                <li>
+                    <a href="/" class="text-blue-500 hover:underline">Home</a>
+                </li>
+                <li>/</li>
+                <li class="text-gray-300">{{ link }}</li>
+            </ol>
+        </nav>
         <form
             method="post"
             class="min-h-screen bg-gray-900 text-white flex items-center justify-center"
             action="/{{ link }}/save"
         >
-            <button
-                class="absolute top-4 right-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                onclick="navigator.clipboard.writeText(document.querySelector('textarea').value);document.querySelector('textarea').select()"
-            >
-                Copy
-            </button>
-            <div class="w-full max-w-4xl p-4">
+            <div class="relative w-full max-w-4xl p-4">
+                <button
+                    class="absolute top-12 right-8 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    onclick="navigator.clipboard.writeText(document.querySelector('textarea').value);document.querySelector('textarea').select()"
+                >
+                    Copy
+                </button>
                 <textarea
                     id="t-1"
                     autocorrect="off"
                     spellcheck="false"
                     name="content"
-                    class="w-full h-96 p-4 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
+                    class="w-full p-4 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 my-4"
                     placeholder="Write your text here..."
                     onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}"
                 >
 {% if prefill != "" %}{{ prefill }}{% endif %}</textarea
                 >
-                <button
+                <div class="flex flex-wrap gap-6 sm:flex-nowrap">
                     <button
-                    type="submit"
-                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    onclick="checkContent()"
-                >
-                    Save
-                </button>
-                <button
-                    formaction="/{{ link }}/delete"
-                    class="mt-2 block w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-center focus:outline-none focus:ring-2 focus:ring-red-500"
-                    onclick="return confirm('Are you sure you want to delete this item?');"
-                >
-                    Delete
-                </button>
+                        <button
+                        type="submit"
+                        class="w-full mt-2 block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        onclick="checkContent()"
+                    >
+                        Save
+                    </button>
+                    <button
+                        formaction="/{{ link }}/delete"
+                        class="mt-2 block w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-red-500"
+                        onclick="return confirm('Are you sure you want to delete this item?');"
+                    >
+                        Delete
+                    </button>
+                </div>
 
                 <textarea
                     autocorrect="off"
@@ -151,7 +162,8 @@
                     id="t-2"
                     placeholder="Placeholder for images"
                 >
-{% if images %}{{ '\n'.join(images) }}{% endif %}</textarea
+                  {% if images %}{{ '\n'.join(images) }}{% endif %}
+                </textarea
                 >
             </div>
         </form>
@@ -179,7 +191,9 @@
         </div>
         {% endif %}
 
+        <script src="https://rawgit.com/jackmoore/autosize/master/dist/autosize.min.js"></script>
         <script>
+            autosize(document.getElementById("t-1"));
             function checkContent() {
                 const textArea = document.querySelector("textarea");
                 if (textArea.value.trim() === "") {
