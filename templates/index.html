@@ -37,7 +37,7 @@
                 Submit
             </button>
         </div>
-
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
         <script>
             (function () {
                 const password = "{{ password }}"; // Inject secure password
@@ -70,7 +70,10 @@
                 window.verifyPassword = function () {
                     const userInput =
                         document.getElementById("passwordInput").value;
-                    if (userInput === password) {
+
+                        const userInputHash = CryptoJS.SHA256(userInput).toString(CryptoJS.enc.Hex);
+
+                    if (userInputHash === password) {
                         sessionStorage.setItem("authenticated", "true");
                         sessionStorage.setItem("lastActive", Date.now());
                         document.getElementById(

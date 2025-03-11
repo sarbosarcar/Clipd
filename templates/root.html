@@ -15,7 +15,7 @@
         <input type="password" id="passwordInput" class="bg-gray-800 text-white p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" autofocus>
         <button onclick="verifyPassword()" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">Submit</button>
     </div>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script>
         (function () {
           const password = "{{ password }}"; // Inject secure password
@@ -43,7 +43,10 @@
           let attempts = 0;
           window.verifyPassword = function () {
             const userInput = document.getElementById("passwordInput").value;
-            if (userInput === password) {
+            
+            const userInputHash = CryptoJS.SHA256(userInput).toString(CryptoJS.enc.Hex);
+
+            if (userInputHash === password) {
               sessionStorage.setItem("authenticated", "true");
               sessionStorage.setItem("lastActive", Date.now());
               document.getElementById("passwordPrompt").style.display = "none"; // Hide prompt

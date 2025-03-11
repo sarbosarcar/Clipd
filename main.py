@@ -10,6 +10,7 @@ from supabase import create_client, Client
 import os
 import dotenv
 import base64
+import hashlib
 from datetime import datetime, timedelta
 
 dotenv.load_dotenv()
@@ -18,7 +19,8 @@ url: str = os.environ.get("SUPABASE_URL")
 key: str = os.environ.get("SUPABASE_KEY")
 supabase: Client = create_client(url, key)
 LOGIN_PASSWORD: str = os.environ.get("LOGIN_PASSWORD")
- 
+hashed_password = hashlib.sha256(LOGIN_PASSWORD.encode()).hexdigest()
+
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -39,7 +41,7 @@ async def fetch_details(request: Request):
     response = supabase.table("clipboard").select("created_at, link").order("created_at", desc=True).execute().data
     for r in response:
         r["created_at"] = format_datetime(r["created_at"])
-    return templates.TemplateResponse(request=request, name="root.html", context={"links": response, "password": LOGIN_PASSWORD})
+    return templates.TemplateResponse(request=request, name="root.html", context={"links": response, "password": hashed_password})
 
 @app.get("/{cliplink}", response_class=HTMLResponse)
 async def read_item(cliplink: str, request: Request):
@@ -51,13 +53,13 @@ async def read_item(cliplink: str, request: Request):
         img = []
     if response == []:
         return templates.TemplateResponse(
-            request=request, name="index.html", context={"link": cliplink, "prefill": "", "images": img, "password": LOGIN_PASSWORD}
+            request=request, name="index.html", context={"link": cliplink, "prefill": "", "images": img, "password": hashed_password}
         )
     else:
         prefill = response[0]["encoded"]
         prefill = base64.b64decode(prefill.encode("utf-8")).decode("utf-8")
         return templates.TemplateResponse(
-            request=request, name="index.html", context={"link": cliplink, "prefill": prefill, "images": img, "password": LOGIN_PASSWORD}
+            request=request, name="index.html", context={"link": cliplink, "prefill": prefill, "images": img, "password": hashed_password}
         )
 
 @app.post("/{cliplink}/save")
