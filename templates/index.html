@@ -10,12 +10,12 @@
         />
 
         <link rel="icon" type="image/png" href={{ url_for('static',
-        path="/favicon/favicon-32x32.png") }} sizes="32x32"> 
-        <link rel="icon" type="image/png" href={{ url_for('static',
-        path="/favicon/favicon-16x16.png") }} sizes="16x16"> 
-        <link rel="apple-touch-icon" sizes="180x180" href={{ url_for('static',
-        path="/favicon/apple-touch-icon.png") }}> 
-        <link rel="manifest" href={{ url_for('static', path="/favicon/site.webmanifest") }}>
+        path="/favicon/favicon-32x32.png") }} sizes="32x32"> <link rel="icon"
+        type="image/png" href={{ url_for('static',
+        path="/favicon/favicon-16x16.png") }} sizes="16x16"> <link
+        rel="apple-touch-icon" sizes="180x180" href={{ url_for('static',
+        path="/favicon/apple-touch-icon.png") }}> <link rel="manifest" href={{
+        url_for('static', path="/favicon/site.webmanifest") }}>
 
         <div
             id="passwordPrompt"
@@ -115,7 +115,6 @@
         </ol>
     </nav>
 
-
         <form
             method="post"
             class="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center"
@@ -132,7 +131,7 @@
                     autocorrect="off"
                     spellcheck="false"
                     name="content"
-                    class="w-full h-96 p-4 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
+                    class="w-full p-4 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 my-4"
                     placeholder="Write your text here..."
                     onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}"
                 >
@@ -163,7 +162,8 @@
                     id="t-2"
                     placeholder="Placeholder for images"
                 >
-{% if images %}{{ '\n'.join(images) }}{% endif %}</textarea
+                  {% if images %}{{ '\n'.join(images) }}{% endif %}
+                </textarea
                 >
             </div>
         </form>
