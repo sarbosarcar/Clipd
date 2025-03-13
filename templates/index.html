@@ -42,7 +42,7 @@
             (function () {
                 const password = "{{ password }}"; // Inject secure password
                 const maxAttempts = 3;
-                const timeoutMinutes = 5;
+                const timeoutMinutes = 15;
 
                 function logout() {
                     sessionStorage.removeItem("authenticated");
@@ -177,19 +177,14 @@
         >
             <h1 class="text-4xl font-mono">Images copied:</h1>
             {% for image in images %}
-            <div class="relative bg-gray-800 p-4 rounded-lg my-4">
-                <button
-                    class="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-700 delete-image"
-                    data-image-src="{{ image }}"
-                >
-                    ✕
-                </button>
-                <img
-                    src="{{ image }}"
-                    alt="Pasted Image"
-                    class="w-full h-auto rounded-lg"
-                />
-            </div>
+                {% if image %}
+                    <div class="relative bg-gray-800 p-4 rounded-lg my-4">
+                    <button class="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-700 delete-image" data-image-src="{{ image }}">
+                        ✕
+                    </button>
+                    <img src="{{ image }}" alt="Pasted Image" class="w-full h-auto rounded-lg">
+                    </div>
+                {% endif %}
             {% endfor %}
         </div>
         {% endif %}

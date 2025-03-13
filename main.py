@@ -47,20 +47,20 @@ async def fetch_details(request: Request):
 async def read_item(cliplink: str, request: Request):
     response = supabase.table("clipboard").select("encoded").eq("link", cliplink).execute().data
     images = supabase.table("clipboard").select("images").eq("link", cliplink).execute().data
+    
     if images:
         img = images[0]["images"]
     else:
         img = []
     if response == []:
-        return templates.TemplateResponse(
-            request=request, name="index.html", context={"link": cliplink, "prefill": "", "images": img, "password": hashed_password}
-        )
+        prefill = ""
     else:
         prefill = response[0]["encoded"]
         prefill = base64.b64decode(prefill.encode("utf-8")).decode("utf-8")
-        return templates.TemplateResponse(
-            request=request, name="index.html", context={"link": cliplink, "prefill": prefill, "images": img, "password": hashed_password}
-        )
+    
+    return templates.TemplateResponse(
+        request=request, name="index.html", context={"link": cliplink, "prefill": prefill, "images": img, "password": hashed_password}
+    )
 
 @app.post("/{cliplink}/save")
 async def write_item(request: Request, cliplink: str, content: str = Form(...), img_content: str = Form(...)):
@@ -71,8 +71,8 @@ async def write_item(request: Request, cliplink: str, content: str = Form(...), 
     imgs = img_content.split("\n")
     imgs_ret = []
     for img in imgs:
-        if img.strip("\r"):
-            imgs_ret.append(img.strip("\r"))
+        if img.strip("\r \n"):
+            imgs_ret.append(img.strip("\r \n"))
     
     if response == []:
         if content != "":
