@@ -190,9 +190,12 @@
         {% endif %}
 
         
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/autosize.js/4.0.2/autosize.min.js"></script>
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/autosize.js/3.0.20/autosize.min.js" integrity="sha512-EAEoidLzhKrfVg7qX8xZFEAebhmBMsXrIcI0h7VPx2CyAyFHuDvOAUs9CEATB2Ou2/kuWEDtluEVrQcjXBy9yw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
         <script>
-            autosize(document.querySelector("#t-1"));
+            let textarea = document.getElementById("t-1");
+            textarea.style.height = textarea.scrollHeight + "px";
+            
+            
 
             document.getElementById("copyButton").addEventListener("click", function (event) {
         event.preventDefault();  // Prevent form submission
@@ -256,7 +259,7 @@
                     const textarea = document.querySelector("#t-1");
 
                     if (textarea && text) {
-                        textarea.value += `\n${text}`;
+                        textarea.value += `${text}`;
                         alert("Text pasted successfully!");
                     }
                 }
